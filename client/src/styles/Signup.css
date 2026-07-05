@@ -17,7 +17,7 @@ label{
 	transition: .5s ease-in-out;
 }
 input{
-	width: 60%;
+	width: 100%;
 	height: 10px;
 	background: #e0dede;
 	justify-content: center;
@@ -33,7 +33,8 @@ button{
 	height: 40px;
 	margin: 10px auto;
 	justify-content: center;
-	display: block;
+	display: flex;
+    align-items: center;
 	color: #fff;
 	background: #573b8a;
 	font-size: 1em;
