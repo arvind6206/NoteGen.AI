@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/Signup.css";
+import "../../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -35,31 +35,37 @@ function Signup() {
   return (
     <div className="signup">
       <form onSubmit={handleSignup}>
-        <label htmlFor="chk" aria-hidden="true">
-          Sign up
-        </label>
+        <h1>Sign Up</h1>
+
+        <label className="field-label">Name</label>
         <input
           type="text"
           name="name"
-          placeholder="Name"
+          placeholder="Enter your name"
           value={formData.name}
           onChange={handleChange}
         />
+
+        <label className="field-label">Email</label>
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Enter your email"
           value={formData.email}
           onChange={handleChange}
         />
+
+        <label className="field-label">Password</label>
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={formData.password}
           onChange={handleChange}
         />
-        <button type="submit">Sign up</button>
+
+        <button type="submit">Sign Up</button>
+
         <button type="button" onClick={() => navigate("/login")}>
           Login
         </button>
