@@ -8,8 +8,9 @@ const app = express()
 
 app.use(cors())
 dotenv.config()
-
 app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+
 const PORT = process.env.PORT || 3000
 
 app.use('/api/v1/user', userRouter)

@@ -2,6 +2,7 @@ import { UserModel } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+
 export const signup = async(req, res) => {
     try {
         const {name, email, password} = req.body
@@ -55,4 +56,13 @@ export const login = async(req, res) => {
             msg: "Internal Server Error"
         })
     }
+}
+
+export const uploadFile = (req, res) => {
+    console.log(req.body)
+    console.log(req.file)
+    res.status(200).json({
+        msg: "File Uploaded successfully",
+        file: req.file
+    })
 }
