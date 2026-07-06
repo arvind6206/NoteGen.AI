@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import userRouter from './routes/user.routes.js'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import genRouter from './routes/generate.routes.js'
 
 const app = express()
 
@@ -14,6 +15,8 @@ app.use(express.urlencoded({extended: false}))
 const PORT = process.env.PORT || 3000
 
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/notes', genRouter)
+
 
 
 async function main(){

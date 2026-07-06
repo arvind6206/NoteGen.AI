@@ -1,28 +1,27 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const noteSchema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema(
+  {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserModel",
-        required: true
-    },
-    topic: {
-        type: String,
-        required: true
-    },
-    classLevel: String,
-    examType: String,
-    revisionMode: {
-        type: Boolean,
-        default: false
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
 
-    includeDiagram: Boolean,
-    includeChart: Boolean,
+    pdf: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pdf",
+      required: true,
+    },
+
     content: {
-        type: mongoose.Schema.Types.Mixed,
-        required: true
-    }
-}, {timestamps: true})
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const NoteModel = mongoose.model('Note', noteSchema)
+export const NoteModel = mongoose.model("Note", noteSchema);

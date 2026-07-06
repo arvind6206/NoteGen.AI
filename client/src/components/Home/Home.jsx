@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import "../../styles/Home.css";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [file, setFile] = useState(null);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -27,7 +29,7 @@ function Home() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       alert(res.data.msg);
@@ -39,28 +41,17 @@ function Home() {
 
   return (
     <div className="home-container">
-
       <div className="upload-card">
-
         <h1>📄 NoteGen AI</h1>
 
         <p className="subtitle">
           Upload your notes, PDF or document to get AI-powered summaries.
         </p>
 
-        <form
-          className="form-container"
-          onSubmit={handleUpload}
-        >
+        <form className="form-container" onSubmit={handleUpload}>
+          <label className="upload-label">Choose File</label>
 
-          <label className="upload-label">
-            Choose File
-          </label>
-
-          <input
-            type="file"
-            onChange={handleFileChange}
-          />
+          <input type="file" onChange={handleFileChange} />
 
           {file && (
             <p className="file-name">
@@ -68,14 +59,17 @@ function Home() {
             </p>
           )}
 
-          <button type="submit">
-            Upload File
+          <button type="submit">Upload File</button>
+
+          <button
+            type="button"
+            className="generate-btn"
+            onClick={() => navigate("/notes")}
+          >
+            Generate Notes
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }
