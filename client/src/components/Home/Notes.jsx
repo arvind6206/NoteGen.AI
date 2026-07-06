@@ -1,154 +1,33 @@
-import { useState } from "react";
-import axios from "axios";
-import "../../styles/Notes.css"
+import { useLocation } from "react-router-dom";
 
-function Notes() {
+import "../../styles/Notes.css";
 
-  const [formData, setFormData] = useState({
-    topic: "",
-    classLevel: "",
-    examType: "",
-    revisionMode: false,
-    includeDiagram: false,
-    includeChart: false,
-  });
+function Notes(){
 
-  const [notes, setNotes] = useState("");
+    const {state}=useLocation();
 
-  const [loading, setLoading] = useState(false);
+    const notes=state?.notes;
 
-  const token = localStorage.getItem("token");
+    return(
 
-  const handleChange = (e) => {
+        <div className="notes-container">
 
-    const { name, value, type, checked } = e.target;
+            <div className="notes-card">
 
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
+                <h1>Generated Notes</h1>
 
-  const generateNotes = async (e) => {
+                <pre>
 
-    e.preventDefault();
+                    {JSON.stringify(notes,null,2)}
 
-    setLoading(true);
+                </pre>
 
-    try {
+            </div>
 
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/notes/generate-notes",
-        formData,
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
+        </div>
 
-      setNotes(res.data.data);
+    )
 
-    } catch (error) {
-
-      alert(error.response?.data?.msg || "Something went wrong");
-
-    } finally {
-
-      setLoading(false);
-
-    }
-  };
-
-  return (
-
-    <div className="notes-container">
-
-      <div className="notes-card">
-
-        <h1>Generate AI Notes</h1>
-
-        <form onSubmit={generateNotes}>
-
-          <input
-            type="text"
-            name="topic"
-            placeholder="Enter Topic"
-            value={formData.topic}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="classLevel"
-            placeholder="Class Level"
-            value={formData.classLevel}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="examType"
-            placeholder="Exam Type"
-            value={formData.examType}
-            onChange={handleChange}
-          />
-
-          <label>
-            <input
-              type="checkbox"
-              name="revisionMode"
-              checked={formData.revisionMode}
-              onChange={handleChange}
-            />
-            Revision Mode
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              name="includeDiagram"
-              checked={formData.includeDiagram}
-              onChange={handleChange}
-            />
-            Include Diagram
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              name="includeChart"
-              checked={formData.includeChart}
-              onChange={handleChange}
-            />
-            Include Chart
-          </label>
-
-          <button type="submit">
-
-            {loading ? "Generating..." : "Generate Notes"}
-
-          </button>
-
-        </form>
-
-        {notes && (
-
-          <div className="generated-notes">
-
-            <h2>Generated Notes</h2>
-
-            <pre>{notes}</pre>
-
-          </div>
-
-        )}
-
-      </div>
-
-    </div>
-
-  );
 }
 
 export default Notes;

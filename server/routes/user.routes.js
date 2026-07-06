@@ -1,12 +1,19 @@
-import {Router} from 'express'
-import { login, signup, uploadFile} from '../controllers/user.controller.js'
-import upload from '../middlewares/upload.js'
+import { Router } from "express";
+import { signup, login, uploadFile } from "../controllers/user.controller.js";
+import authMiddleware from "../middlewares/auth.js";
+import upload from "../middlewares/upload.js";
 
-const userRouter = Router()
+const userRouter = Router();
 
-userRouter.post('/signup', signup)
-userRouter.post('/login', login)
-userRouter.post('/upload', upload.single("file"), uploadFile)
+userRouter.post("/signup", signup);
 
+userRouter.post("/login", login);
 
-export default userRouter
+userRouter.post(
+    "/upload",
+    authMiddleware,
+    upload.single("file"),
+    uploadFile
+);
+
+export default userRouter;

@@ -1,71 +1,83 @@
+import { PdfModel } from "../models/pdf.model.js";
 import { NoteModel } from "../models/notes.model.js";
 import { UserModel } from "../models/user.model.js";
-import { generateGeminiResponse } from "../services/gemini.services.js";
+
+import { extractPdfText } from "../utils/pdfExtractor.js";
+
 import { buildPrompt } from "../utils/prompt.js";
 
+import { generateGeminiResponse } from "../services/gemini.services.js";
+
 export const generateNotes = async (req, res) => {
-  try {
-    const {
-      topic,
-      classLevel,
-      examType,
-      revisionMode = false,
-      includeDiagram = false,
-      includeChart = false,
-    } = req.body;
 
-    if(!topic){
-        return res.status(400).json({
-            msg: "topic is required"
-        })
+    try{
+
+        const user = await UserModel.findById(req.userId);
+
+        if(!user){
+
+            return res.status(404).json({
+                msg:"User not found"
+            });
+
+        }
+
+        const pdfId = req.body.pdfId;
+
+        const pdf = await PdfModel.findById(pdfId);
+
+        if(!pdf){
+
+            return res.status(404).json({
+                msg:"PDF not found"
+            });
+
+        }
+
+        const pdfText = await extractPdfText(pdf.filePath);
+
+        const prompt = buildPrompt(pdfText);
+
+        const aiResponse = await generateGeminiResponse(prompt);
+
+        const note = await NoteModel.create({
+
+            user:user._id,
+
+            pdf:pdf._id,
+
+            content:aiResponse
+
+        });
+
+        user.notes.push(note._id);
+
+        await user.save();
+
+        res.status(200).json({
+
+            msg:"Notes Generated Successfully",
+
+            notes:aiResponse,
+
+            noteId:note._id
+
+        });
+
     }
 
-    const user = await UserModel.findById(req.userId)
-    if(!user){
-        return res.status(400).json({
-            msg: "user not found"
-        })
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            msg:"Generation Failed",
+
+            error:error.message
+
+        });
+
     }
 
-    const prompt = buildPrompt({
-        topic,
-      classLevel,
-      examType,
-      revisionMode,
-      includeDiagram,
-      includeChart
-    })
-
-    const aiResponse = await generateGeminiResponse(prompt)
-
-    const notes = await NoteModel.create({
-        user: user._id,
-        topic,
-        classLevel,
-        examType,
-        revisionMode,
-        includeDiagram,
-        includeChart,
-        content: aiResponse
-    })
-
-    if(!Array.isArray(user.notes)){
-        user.notes = []
-    }
-
-    user.notes.push(notes._id)
-    await user.save()
-    
-    return res.status(200).json({
-        data: aiResponse,
-        noteId: notes._id,
-    })
-
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-        error: "Ai generation failed",
-        message: error.message
-    })
-  }
-};
+}

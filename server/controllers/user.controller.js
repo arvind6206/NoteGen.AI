@@ -1,6 +1,7 @@
 import { UserModel } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { PdfModel } from "../models/pdf.model.js"
 
 
 export const signup = async(req, res) => {
@@ -58,11 +59,68 @@ export const login = async(req, res) => {
     }
 }
 
-export const uploadFile = (req, res) => {
-    console.log(req.body)
-    console.log(req.file)
-    res.status(200).json({
-        msg: "File Uploaded successfully",
-        file: req.file
-    })
-}
+export const uploadFile = async (req, res) => {
+
+    try {
+
+        if (!req.file) {
+
+            return res.status(400).json({
+                msg: "No file uploaded"
+            });
+
+        }
+
+        const user = await UserModel.findById(req.userId);
+
+        if (!user) {
+
+            return res.status(404).json({
+                msg: "User not found"
+            });
+
+        }
+
+        const pdf = await PdfModel.create({
+
+            user: user._id,
+
+            originalName: req.file.originalname,
+
+            fileName: req.file.filename,
+
+            filePath: req.file.path,
+
+            fileSize: req.file.size,
+
+            mimeType: req.file.mimetype,
+
+        });
+
+        user.pdfs.push(pdf._id);
+
+        await user.save();
+
+        return res.status(200).json({
+
+            msg: "PDF Uploaded Successfully",
+
+            pdfId: pdf._id
+
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+
+            msg: "Upload Failed",
+
+            error: error.message
+
+        });
+
+    }
+
+};

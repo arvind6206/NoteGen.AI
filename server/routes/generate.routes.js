@@ -1,10 +1,15 @@
-import {Router} from 'express'
-import authMiddleware from '../middlewares/auth.js'
-import { generateNotes } from '../controllers/generate.controller.js'
+import { Router } from "express";
 
-const genRouter = Router()
+import authMiddleware from "../middlewares/auth.js";
 
-genRouter.post('/generate-notes', authMiddleware, generateNotes)
+import { generateNotes } from "../controllers/generate.controller.js";
 
+const genRouter = Router();
 
-export default genRouter
+genRouter.post(
+    "/generate-notes",
+    authMiddleware,
+    generateNotes
+);
+
+export default genRouter;
