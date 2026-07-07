@@ -131,27 +131,17 @@
 
 
 export const buildPrompt = (pdfText) => {
-
-return `
-
-You are an expert study note generator.
-
-Read the following PDF content and generate well-structured Markdown notes.
-
-Rules:
-
-- Give headings
-- Give bullet points
-- Highlight important concepts
-- Add definitions
-- Add examples if present
-- Add a summary
-- Keep notes concise but complete.
-
-PDF CONTENT:
-
-${pdfText}
-
-`;
-
+  return `
+Generate study notes from the following content.
+Respond ONLY with valid JSON in this exact format, with no markdown formatting, no code fences, and no extra text:
+{
+  "title": "string",
+  "sections": [
+    { "heading": "string", "content": "string" }
+  ]
 }
+
+Content:
+${pdfText}
+`;
+};
