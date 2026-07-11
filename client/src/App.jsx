@@ -1,9 +1,12 @@
 import React from 'react'
-import Signup from './components/pages/Signup'
+import Signup from './pages/Signup'
 import { Route, Routes } from 'react-router-dom'
-import Login from './components/pages/Login'
-import Home from './components/Home/Home'
-import Notes from './components/Home/Notes'
+import Login from './pages/Login'
+import Home from './Home/Home'
+import Notes from './Home/Notes'
+import Dashboard from './pages/Dashboard'
+import MyNotes from './pages/MyNotes'
+import NoteDetails from './pages/NoteDetails'
 
 function App() {
   return (
@@ -12,6 +15,13 @@ function App() {
       <Route path='/login' element = {<Login/>}/>
       <Route path='/home' element = {<Home/>}/>
       <Route path="/notes" element={<Notes />} />
+
+      <Route path="/dashboard" element={<Dashboard />}>
+        <Route index element={<MyNotes />} />
+        <Route path="notes" element={<MyNotes />} />
+        <Route path="note/:id" element={<NoteDetails />} />
+      </Route>
+
 
     </Routes>
   )

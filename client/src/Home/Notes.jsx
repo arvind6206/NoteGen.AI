@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import "../../styles/Notes.css";
+import "../styles/Notes.css";
 
 function Notes(){
 
