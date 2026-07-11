@@ -88,12 +88,59 @@ export const getUserNotes = async (req, res) => {
             user: req.userId
         }).populate("pdf").sort({createdat: -1})
 
+        if(!notes){
+            return res.status(400).json({
+                msg: "Notes not found"
+            })
+        }
+
         res.status(200).json({
             notes: notes
         })
     } catch (error) {
         res.status(500).json({
             msg: "Failed to fetch notes",
+            error: error.message
+        })
+    }
+}
+
+export const getNotesById = async(req, res) => {
+    try {
+        const {id} = req.params;
+
+        const notes = await NoteModel.findById(
+            id
+        )
+        res.status(200).json({
+            notes: notes
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg: "Internal Server error",
+            error: error.message
+        })
+    }
+}
+
+export const deleteNotesById = async(req, res) => {
+    try {
+        const {id} = req.params;
+
+        const notes = await NoteModel.findById(id)
+        if(!notes){
+            return res.status(400).json({
+                msg: "Note not found"
+            })
+        }
+        await NoteModel.findByIdAndDelete(id)
+        res.status(200).json({
+            msg: "Notes deleted successfully",
+            notes: notes
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg: "Internal Server error",
             error: error.message
         })
     }
