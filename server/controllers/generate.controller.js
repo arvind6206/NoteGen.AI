@@ -81,3 +81,20 @@ export const generateNotes = async (req, res) => {
     }
 
 }
+
+export const getUserNotes = async (req, res) => {
+    try {
+        const notes = await NoteModel.find({
+            user: req.userId
+        }).populate("pdf").sort({createdat: -1})
+
+        res.status(200).json({
+            notes: notes
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg: "Failed to fetch notes",
+            error: error.message
+        })
+    }
+}

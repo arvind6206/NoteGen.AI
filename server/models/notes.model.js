@@ -18,6 +18,19 @@ const noteSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },
+    title:{
+      type: String,
+      required: true
+    },
+    noteType:{
+      type: String,
+      enum: ["short", "detailed", "exam", "revision"],
+      default: "detailed"
+    },
+    favourite: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,
