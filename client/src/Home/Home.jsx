@@ -20,7 +20,7 @@ function Home() {
     e.preventDefault();
 
     if (!file) {
-      return alert("Please select a PDF first.");
+      return alert("Please select a PDF");
     }
 
     const formData = new FormData();
